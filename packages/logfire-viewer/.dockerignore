@@ -1,0 +1,36 @@
+# Default: deny everything, then re-include what's needed.
+# This keeps build context tiny even if the monorepo root is the build root.
+*
+
+# Allow workspace metadata at the repo root.
+!package.json
+!package-lock.json
+!turbo.json
+!LICENSE
+
+# Allow the packages this image needs (others would just slow down the build).
+!packages/
+packages/**/node_modules
+packages/**/dist
+packages/**/*.db
+packages/**/*.db-wal
+packages/**/*.db-shm
+
+# Source of truth files inside the viewer.
+!packages/logfire-viewer/**
+
+# But never copy local data, builds, or git internals.
+.git
+.github
+.changeset
+node_modules
+**/node_modules
+**/dist
+**/.turbo
+**/coverage
+**/.DS_Store
+**/.env
+**/.env.*
+logfire-data
+*.log
+*.tgz

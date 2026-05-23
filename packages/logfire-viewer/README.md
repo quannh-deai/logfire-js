@@ -47,6 +47,37 @@ node your-app.js
 
 Open <http://localhost:4318> and log in with the project token to browse data.
 
+## Docker
+
+A `Dockerfile` and `docker-compose.yml` ship with the package. Both expect
+the **monorepo root** as the build context.
+
+```sh
+# From the monorepo root:
+docker compose -f packages/logfire-viewer/docker-compose.yml up -d --build
+
+# Read the admin token from the first-start logs:
+docker compose -f packages/logfire-viewer/docker-compose.yml logs viewer
+
+# Create a project + a project token:
+docker compose -f packages/logfire-viewer/docker-compose.yml exec viewer \
+  node dist/cli.cjs admin add-project demo
+docker compose -f packages/logfire-viewer/docker-compose.yml exec viewer \
+  node dist/cli.cjs admin add-token --project demo --name my-app
+```
+
+Or without compose:
+
+```sh
+docker build -f packages/logfire-viewer/Dockerfile -t logfire-viewer .
+docker run --rm -p 4318:4318 -p 4317:4317 -v logfire-data:/data logfire-viewer
+```
+
+The container listens on `0.0.0.0:4318` (HTTP/OTLP + UI) and `0.0.0.0:4317`
+(gRPC). Data is persisted to the `/data` volume. The same image runs
+admin subcommands — pass them as the container args, e.g.
+`docker run ... logfire-viewer admin add-project demo`.
+
 ## CLI
 
 ```

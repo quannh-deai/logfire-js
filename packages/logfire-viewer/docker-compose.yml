@@ -1,0 +1,46 @@
+# docker compose -f packages/logfire-viewer/docker-compose.yml up -d
+#
+# First-run bootstrap:
+#   docker compose -f packages/logfire-viewer/docker-compose.yml logs viewer
+#     -> read the admin token from stdout (printed once on first start)
+#   docker compose -f packages/logfire-viewer/docker-compose.yml exec viewer \
+#     node dist/cli.cjs admin add-project demo
+#   docker compose -f packages/logfire-viewer/docker-compose.yml exec viewer \
+#     node dist/cli.cjs admin add-token --project demo --name my-app
+#     -> save the printed project token; use it as LOGFIRE_TOKEN in your app
+
+services:
+  viewer:
+    build:
+      # Build context is the monorepo root so the multi-stage build can
+      # resolve npm workspaces.
+      context: ../..
+      dockerfile: packages/logfire-viewer/Dockerfile
+    image: pydantic/logfire-viewer:dev
+    container_name: logfire-viewer
+    restart: unless-stopped
+    environment:
+      # Bind to all interfaces inside the container. The default `127.0.0.1`
+      # would only be reachable from inside the container itself.
+      LOGFIRE_VIEWER_HOST: 0.0.0.0
+      LOGFIRE_VIEWER_DATA_DIR: /data
+      # Uncomment to cap global ingest throughput (records/sec across all tokens).
+      # LOGFIRE_VIEWER_MAX_RPS: "10000"
+      # Uncomment to disable the gRPC receiver (saves a port and a few MB RAM).
+      # LOGFIRE_VIEWER_GRPC: "0"
+      # Uncomment to disable the background retention sweeper (data grows forever).
+      # LOGFIRE_VIEWER_RETENTION: "0"
+    ports:
+      - "4318:4318"  # OTLP HTTP + API + web UI
+      - "4317:4317"  # OTLP gRPC
+    volumes:
+      - viewer-data:/data
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:4318/healthz').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  viewer-data:
