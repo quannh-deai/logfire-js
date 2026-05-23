@@ -125,3 +125,10 @@ await close()
 This is a young package — feature scope is wide but rough edges remain. Not
 intended as a drop-in replacement for the hosted Logfire backend. For
 production observability use [Logfire Cloud](https://pydantic.dev/logfire).
+
+## Integration
+
+See [`INTEGRATION.md`](./INTEGRATION.md) for step-by-step instructions on
+wiring up Node.js, Browser, Python, and other OpenTelemetry SDKs (and
+the OpenTelemetry Collector) to send data to the viewer, plus how to read
+data back via the REST/SSE/SQL API.
