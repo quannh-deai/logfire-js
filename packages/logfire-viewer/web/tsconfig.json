@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "@pydantic/logfire-tooling-config/tsconfig.base.json",
+  "compilerOptions": {
+    "types": ["vite/client"],
+    "jsx": "react-jsx",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"]
+  },
+  "include": ["src"]
+}

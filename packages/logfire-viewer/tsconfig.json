@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "@pydantic/logfire-tooling-config/tsconfig.base.json",
+  "compilerOptions": {
+    "types": ["node", "vite/client"],
+    "jsx": "react-jsx",
+    "resolveJsonModule": true
+  },
+  "include": [
+    "src",
+    "web/src",
+    "vite.config.ts",
+    "vite.config.web.ts",
+    "eslint.config.mjs",
+    "prettier.config.mjs"
+  ]
+}

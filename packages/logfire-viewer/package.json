@@ -1,0 +1,88 @@
+{
+  "name": "@pydantic/logfire-viewer",
+  "private": false,
+  "description": "Self-hosted local server and web UI for ingesting and analyzing OTLP traces, logs, and metrics — a mini Logfire backend.",
+  "author": {
+    "name": "The Pydantic Team",
+    "email": "engineering@pydantic.dev",
+    "url": "https://pydantic.dev"
+  },
+  "sideEffects": false,
+  "homepage": "https://pydantic.dev/logfire",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "logfire",
+    "observability",
+    "opentelemetry",
+    "otlp",
+    "tracing",
+    "self-hosted",
+    "viewer"
+  ],
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "logfire-viewer": "./dist/cli.cjs"
+  },
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "scripts": {
+    "dev": "concurrently -k -n server,web \"vite build --watch\" \"vite --config vite.config.web.ts\"",
+    "build": "vite build && npm run build:web",
+    "build:web": "vite build --config vite.config.web.ts",
+    "start": "node dist/cli.cjs",
+    "lint": "eslint",
+    "typecheck": "tsc",
+    "prepack": "cp ../../LICENSE .",
+    "postpack": "rm LICENSE",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@grpc/grpc-js": "^1.12.0",
+    "@grpc/proto-loader": "^0.7.13",
+    "@hono/node-server": "^1.13.0",
+    "@opentelemetry/api": "^1.9.0",
+    "@opentelemetry/otlp-transformer": "^0.200.0",
+    "better-sqlite3": "^11.3.0",
+    "hono": "^4.6.0",
+    "mri": "^1.2.0"
+  },
+  "devDependencies": {
+    "@pydantic/logfire-tooling-config": "*",
+    "@types/better-sqlite3": "^7.6.11",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.3.0",
+    "concurrently": "^9.0.0",
+    "eslint": "^9.22.0",
+    "prettier": "3.5.3",
+    "react": "^18.3.0",
+    "react-dom": "^18.3.0",
+    "react-router-dom": "^6.27.0",
+    "typescript": "^5.8.2",
+    "vite": "^6.2.0",
+    "vite-plugin-dts": "^4.5.3",
+    "vitest": "^3.1.1"
+  },
+  "files": [
+    "dist",
+    "LICENSE"
+  ]
+}
